@@ -15,10 +15,10 @@ export class NavComponent implements OnInit {
   }
 
   login() {
-    this.authService.login(this.model).subscribe(next =>{
-      console.log('Zalogowano pomyslnie');
+    this.authService.login(this.model).subscribe(next => {
+     console.log('Zalogowano pomyslnie');
     }, error => {
-      console.log('Nie udalo sie zalogowac');
+      console.log(error);
     });
   }
 
