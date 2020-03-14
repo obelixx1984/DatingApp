@@ -7,6 +7,9 @@ import { AuthGuard } from './_guards/auth.guard';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 import { MemberListResolver } from './_resolvers/member-list.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+import { OchronaPrzedzapisemZmian } from './_guards/ochrona-przedzapisem-zmian.guard';
 
 export const appRoutes: Routes = [
     { path: '', component: HomeComponent},
@@ -19,6 +22,8 @@ export const appRoutes: Routes = [
                 resolve: {users: MemberListResolver}},
             { path: 'uzytkownicy/:id', component: MemberDetailComponent,
                 resolve: {user: MemberDetailResolver}},
+            { path: 'uzytkownik/edytuj', component: MemberEditComponent,
+                resolve: {user: MemberEditResolver}, canDeactivate: [OchronaPrzedzapisemZmian]},
             { path: 'wiadomosci', component: MessagesComponent},
             { path: 'listy', component: ListsComponent},
         ]

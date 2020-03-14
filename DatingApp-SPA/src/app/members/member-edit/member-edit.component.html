@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-sm-4">
+      <h1>Edycja Profilu</h1>
+    </div>
+    <div class="col-sm-8">
+      <div *ngIf="editForm.dirty" class="alert alert-info">
+        <strong>Informacja:</strong> Wprowadzasz zmiany. Wszystkie zmiany nie zapisane zostaną utracone!!!
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="card">
+        <img class="card-img-top img-thumbnail" src="{{user.zdjecieUrl}}" alt="{{user.tytul}}">
+        <div class="card-body">
+          <div>
+            <strong>Lokalizacja:</strong>
+            <p>{{user.miasto}}, {{user.kraj}}</p>
+          </div>
+          <div>
+            <strong>Wiek:</strong>
+            <p>{{user.wiek}}</p>
+          </div>
+          <div>
+            <strong>Ostatnio aktywny/a:</strong>
+            <p>{{user.ostatnioAktywny}}</p>
+          </div>
+          <div>
+            <strong>Utworzenie konta:</strong>
+            <p>{{user.utworzony}}</p>
+          </div>
+        </div>
+        <div class="card-footer">
+            <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Zapisz zmiany</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-8">
+      <div class="tab-panel">
+        <tabset class="member-tabset">
+          <tab heading="Edytuj Profil">
+            <form #editForm="ngForm" id="editForm" (ngSubmit)="updateUser()">
+              <h4>Opis:</h4>
+              <textarea name="zainteresowania" rows="6" class="form-control" 
+              [(ngModel)]="user.zainteresowania"></textarea>
+              <h4>Poszukuje:</h4>
+              <textarea name="kogoSzukasz" rows="6" class="form-control" 
+              [(ngModel)]="user.kogoSzukasz"></textarea>
+              <h4>Wprowadzenie:</h4>
+              <textarea name="wprowadzony" rows="6" class="form-control" 
+              [(ngModel)]="user.wprowadzony"></textarea>
+              <h4>Informacja o lokalizacji:</h4>
+              <div class="form-inline">
+                <label for="miasto">Miasto</label>
+                <input type="text" class="form-control" name="miasto" [(ngModel)]="user.miasto">
+                <label for="kraj">Kraj</label>
+                <input type="text" class="form-control" name="kraj" [(ngModel)]="user.kraj">
+              </div>
+            </form>
+
+          </tab>
+          <tab heading="Edytuj Zdjęcia">
+            <p>Edycja zdjęć tutaj</p>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+</div>
