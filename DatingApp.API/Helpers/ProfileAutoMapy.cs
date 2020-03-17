@@ -21,6 +21,8 @@ namespace DatingApp.API.Helpers
                     opt.MapFrom(src => src.Urodziny.WyliczWiek()));
             CreateMap<Photo, DetaleDlaZdjecDto>();
             CreateMap<UserForUpdateDto, User>();
+            CreateMap<Photo, ZwrocZdjecieDto>();
+            CreateMap<DodajZdjecieDlaUzytkownikaDto, Photo>();
         }
     }
 }

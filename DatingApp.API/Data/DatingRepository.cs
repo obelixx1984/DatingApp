@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Controllers.Data;
 using DatingApp.API.Models;
@@ -16,6 +17,19 @@ namespace DatingApp.API.Data
         public void Dodaj<T>(T entity) where T : class
         {
             _context.Add(entity);
+        }
+
+        public async Task<Photo> GetMainPhotoForUser(int userId)
+        {
+            return await _context.Zdjecia.Where(u => u.UserId == userId)
+                .FirstOrDefaultAsync(p => p.ToMenu);
+        }
+
+        public async Task<Photo> GetPhoto(int id)
+        {
+            var photo = await _context.Zdjecia.FirstOrDefaultAsync(p => p.Id == id);
+
+            return photo;
         }
 
         public async Task<User> GetUser(int id)
