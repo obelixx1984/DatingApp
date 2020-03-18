@@ -5,6 +5,8 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { NgForm } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
 import { AuthService } from 'src/app/_services/auth.service';
+import { strings as polishStrings } from 'ngx-timeago/language-strings/pl';
+import { TimeagoIntl } from 'ngx-timeago';
 
 @Component({
   selector: 'app-member-edit',
@@ -21,9 +23,12 @@ export class MemberEditComponent implements OnInit {
       $event.returnValue = true;
     }
   }
- 
+
   constructor(private route: ActivatedRoute, private alertify: AlertifyService,
-              private userService: UserService, private authService: AuthService) { }
+              private userService: UserService, private authService: AuthService, intl: TimeagoIntl) {
+                intl.strings = polishStrings;
+                intl.changes.next();
+              }
 
   ngOnInit() {
     this.route.data.subscribe(data => {

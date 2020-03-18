@@ -24,11 +24,11 @@
           </div>
           <div>
             <strong>Ostatnio aktywny/a:</strong>
-            <p>{{user.ostatnioAktywny}}</p>
+            <p>{{user.ostatnioAktywny | timeago}}</p>
           </div>
           <div>
             <strong>Utworzenie konta:</strong>
-            <p>{{user.utworzony}}</p>
+            <p>{{user.utworzony | date: 'mediumDate'}}</p>
           </div>
         </div>
         <div class="card-footer">

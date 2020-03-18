@@ -4,6 +4,8 @@ import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryOptions, NgxGalleryImage } from '@kolkov/ngx-gallery';
+import { strings as polishStrings } from 'ngx-timeago/language-strings/pl';
+import { TimeagoIntl } from 'ngx-timeago';
 
 @Component({
   selector: 'app-member-detail',
@@ -16,7 +18,10 @@ export class MemberDetailComponent implements OnInit {
   galleryImages: NgxGalleryImage[];
 
   constructor(private userService: UserService, private alertify: AlertifyService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute, intl: TimeagoIntl) {
+                intl.strings = polishStrings;
+                intl.changes.next();
+              }
 
   ngOnInit() {
     this.route.data.subscribe(data => {

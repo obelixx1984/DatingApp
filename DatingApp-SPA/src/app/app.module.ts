@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { LOCALE_ID } from '@angular/core';
 import { NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -12,6 +13,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
+
 import { MessagesComponent } from './messages/messages.component';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './routes';
@@ -31,11 +33,20 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { plLocale } from 'ngx-bootstrap/locale';
+import { registerLocaleData } from '@angular/common';
+import localePl from '@angular/common/locales/pl';
+import { TimeagoModule, TimeagoIntl, TimeagoFormatter, TimeagoCustomFormatter } from 'ngx-timeago';
+
 defineLocale('pl', plLocale);
+registerLocaleData(localePl);
 
 export function tokenGetter() {
    return localStorage.getItem('token');
  }
+
+export class MyIntl extends TimeagoIntl {
+   // do extra stuff here...
+}
 
 @NgModule({
    declarations: [
@@ -53,6 +64,9 @@ export function tokenGetter() {
    ],
    imports: [
       BrowserModule,
+      TimeagoModule.forRoot({
+         intl: { provide: TimeagoIntl, useClass: MyIntl},
+         formatter: { provide: TimeagoFormatter, useClass: TimeagoCustomFormatter }}),
       BrowserAnimationsModule,
       HttpClientModule,
       FormsModule,
@@ -79,10 +93,11 @@ export function tokenGetter() {
       MemberDetailResolver,
       MemberListResolver,
       MemberEditResolver,
+      {provide: LOCALE_ID, useValue: 'pl'},
       OchronaPrzedzapisemZmian
    ],
    bootstrap: [
       AppComponent
    ]
 })
-export class AppModule { }
+export class AppModule {}
