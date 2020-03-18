@@ -54,6 +54,11 @@ export class PhotoEditorComponent implements OnInit {
           toMenu: res.toMenu
         };
         this.photos.push(zdjecie);
+        if (zdjecie.toMenu) {
+          this.authService.zmienZdjecieUzytkownika(zdjecie.url);
+          this.authService.currentUser.zdjecieUrl = zdjecie.url;
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+        }
       }
     };
   }

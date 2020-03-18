@@ -1,17 +1,99 @@
-<form #registerForm="ngForm" (ngSubmit)="rejestruj()">
+<form [formGroup]="formularzRejestracji" (ngSubmit)="rejestruj()">
   <h2 class="text-center text-primary">Zarejestruj</h2>
   <hr>
 
   <div class="form-group">
-    <input type="text" class="form-control" required name="username" [(ngModel)]="model.username" placeholder="Nazwa uzytkownika">
+    <label class="control-label" style="margin-right:10px">Moja płeć: </label>
+    <label class="radio-inline">
+      <input class="mr-3" type="radio" value="kobieta" formControlName="plec">Kobieta
+    </label>
+    <label class="radio-inline ml-3">
+      <input class="mr-3" type="radio" value="mezczyzna" formControlName="plec">Mężczyzna
+    </label>
   </div>
 
   <div class="form-group">
-    <input type="password" class="form-control" required name="password" [(ngModel)]="model.password" placeholder="Haslo">
+    <input type="text" 
+    [ngClass]="{'is-invalid': formularzRejestracji.get('username').errors 
+    && formularzRejestracji.get('username').touched}"
+    class="form-control" 
+    formControlName="username" placeholder="Nazwa uzytkownika">
+    <div class="invalid-feedback">Proszę podać nazwę użytkownika</div>
+  </div>
+
+  <div class="form-group">
+    <input [ngClass]="{'is-invalid': formularzRejestracji.get('tytul').errors 
+    && formularzRejestracji.get('tytul').touched}" class="form-control"
+      placeholder="Twoja nazwa" formControlName="tytul">
+    <div class="invalid-feedback" *ngIf="formularzRejestracji.get('tytul').touched 
+    && formularzRejestracji.get('tytul').hasError('required')">Pole jest wymagane</div>
+  </div>
+
+  <div class="form-group">
+    <input [ngClass]="{'is-invalid': formularzRejestracji.get('Urodziny').errors 
+    && formularzRejestracji.get('Urodziny').touched}" class="form-control"
+      placeholder="Data urodzin" formControlName="Urodziny" type="text" bsDatepicker [bsConfig]="bsConfig">
+    <div class="invalid-feedback" *ngIf="formularzRejestracji.get('Urodziny').touched 
+    && formularzRejestracji.get('Urodziny').hasError('required')">Data urodzin jest wymagana</div>
+  </div>
+
+  <div class="form-group">
+    <input [ngClass]="{'is-invalid': formularzRejestracji.get('miasto').errors 
+    && formularzRejestracji.get('miasto').touched}" class="form-control"
+      placeholder="Miasto" formControlName="miasto">
+    <div class="invalid-feedback" *ngIf="formularzRejestracji.get('miasto').touched 
+    && formularzRejestracji.get('miasto').hasError('required')">Pole Miasto jest wymagane</div>
+  </div>
+
+  <div class="form-group">
+    <input [ngClass]="{'is-invalid': formularzRejestracji.get('kraj').errors 
+    && formularzRejestracji.get('kraj').touched}" class="form-control"
+      placeholder="Kraj" formControlName="kraj">
+    <div class="invalid-feedback" *ngIf="formularzRejestracji.get('kraj').touched 
+    && formularzRejestracji.get('kraj').hasError('required')">Pole Kraj jest wymagane</div>
+  </div>
+
+  <div class="form-group">
+    <input type="password" 
+    [ngClass]="{'is-invalid': formularzRejestracji.get('password').errors 
+    && formularzRejestracji.get('password').touched}"
+    class="form-control" 
+    formControlName="password" placeholder="Haslo">
+    <div class="invalid-feedback"
+    *ngIf="formularzRejestracji.get('password').hasError('required')
+    && formularzRejestracji.get('password').touched">
+    Hasło jest wymagane</div>
+    <div class="invalid-feedback"
+    *ngIf="formularzRejestracji.get('password').hasError('minlength')
+    && formularzRejestracji.get('password').touched">
+    Hasło musi mieć min. 4 litery</div>
+    <div class="invalid-feedback"
+    *ngIf="formularzRejestracji.get('password').hasError('maxlength')
+    && formularzRejestracji.get('password').touched">
+    Hasło może mieć maksymalnie 8 liter</div>
+  </div>
+
+  <div class="form-group">
+    <input type="password" 
+    [ngClass]="{'is-invalid': formularzRejestracji.get('confirmPassword').errors 
+    && formularzRejestracji.get('confirmPassword').touched
+    || formularzRejestracji.get('confirmPassword').touched
+    && formularzRejestracji.hasError('mismatch')}"
+    class="form-control" 
+    formControlName="confirmPassword" 
+    placeholder="Powtórz Haslo">
+    <div class="invalid-feedback"
+    *ngIf="formularzRejestracji.get('confirmPassword').hasError('required')
+    && formularzRejestracji.get('confirmPassword').touched">
+    Hasło jest wymagane</div>
+    <div class="invalid-feedback"
+    *ngIf="formularzRejestracji.hasError('mismatch')
+    && formularzRejestracji.get('confirmPassword').touched">
+    Hasła nie są podobne</div>
   </div>
 
   <div class="form-group text-center">
-    <button class="btn btn-success" type="submit">Rejestruj</button>
+    <button class="btn btn-success" [disabled]="!formularzRejestracji.valid" type="submit">Rejestruj</button>
     <button class="btn btn-default" type="button" (click)="anuluj()">Anuluj</button>
   </div>
   
