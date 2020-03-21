@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Controllers.Data;
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,11 +41,37 @@ namespace DatingApp.API.Data
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<ListaStron<User>> GetUsers(UserParametry userParametry)
         {
-            var users = await _context.Users.Include(p => p.Zdjecia).ToListAsync();
+            var users = _context.Users.Include(p => p.Zdjecia)
+                .OrderByDescending(u => u.OstatnioAktywny).AsQueryable();
 
-            return users;
+            users = users.Where(u => u.Id != userParametry.UserId);
+
+            users = users.Where(u => u.Plec == userParametry.Plec);
+
+            if (userParametry.MinWiek != 18 || userParametry.MaxWiek != 99)
+            {
+                var minDob = DateTime.Today.AddYears(-userParametry.MaxWiek - 1);
+                var maxDob = DateTime.Today.AddYears(-userParametry.MinWiek);
+
+                users = users.Where(u => u.Urodziny >= minDob && u.Urodziny <= maxDob);
+            }
+
+            if (!string.IsNullOrEmpty(userParametry.OstatnioByl))
+            {
+                switch (userParametry.OstatnioByl)
+                {
+                    case "utworzony":
+                        users = users.OrderByDescending(u => u.Utworzony);
+                        break;
+                    default:
+                        users = users.OrderByDescending(u => u.OstatnioAktywny); 
+                        break;
+                }
+            }
+
+            return await ListaStron<User>.CreateAsync(users, userParametry.NumerStrony, userParametry.RozmiarStrony);
         }
 
         public void Usun<T>(T entity) where T : class
