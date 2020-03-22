@@ -14,7 +14,7 @@ export class UserService {
 
 constructor(private http: HttpClient) {}
 
-getUsers(strona?, itemsNaStrone?, userParametry?): Observable<PaginacjaResultat<User[]>> {
+getUsers(strona?, itemsNaStrone?, userParametry?, lubieParametry?): Observable<PaginacjaResultat<User[]>> {
   const paginacjaResultat: PaginacjaResultat<User[]> = new PaginacjaResultat<User[]>();
 
   let params = new HttpParams();
@@ -29,6 +29,14 @@ getUsers(strona?, itemsNaStrone?, userParametry?): Observable<PaginacjaResultat<
     params = params.append('maxWiek', userParametry.maxWiek);
     params = params.append('plec', userParametry.plec);
     params = params.append('ostatnioByl', userParametry.ostatnioByl);
+  }
+
+  if (lubieParametry === 'Lubisz') {
+    params = params.append('lubisz', 'true');
+  }
+  
+  if (lubieParametry === 'Lubic') {
+    params = params.append('lubic', 'true');
   }
 
   return this.http.get<User[]>(this.baseUrl + 'users', { observe: 'response', params})
@@ -57,6 +65,10 @@ ustawGlowneZdjecie(userId: number, id: number) {
 
 usunZdjecie(userId: number, id: number) {
   return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id);
+}
+
+wyslijLubie(id: number, recipientId: number) {
+  return this.http.post(this.baseUrl + 'users/' + id + '/lubie/' + recipientId, {});
 }
 
 }

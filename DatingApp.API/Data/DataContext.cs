@@ -10,5 +10,24 @@ namespace DatingApp.API.Controllers.Data
         public DbSet<Value> Values { get; set; }
         public DbSet<User> Users {get; set;}
         public DbSet<Photo> Zdjecia { get; set; }
+        public DbSet<Lubie> Lajki { get; set; }
+
+         protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Lubie>()
+                .HasKey(k => new {k.LubiId, k.LubiiId});
+
+            builder.Entity<Lubie>()
+                .HasOne(u => u.Lubii)
+                .WithMany(u => u.Lubisz)
+                .HasForeignKey(u => u.LubiiId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.Entity<Lubie>()
+                .HasOne(u => u.Lubi)
+                .WithMany(u => u.Lubic)
+                .HasForeignKey(u => u.LubiId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

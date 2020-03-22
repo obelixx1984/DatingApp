@@ -6,6 +6,7 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -74,6 +75,34 @@ namespace DatingApp.API.Controllers
                 return NoContent();
 
             throw new Exception($"Zapisywanie użytkownika {id} nie powiodło się!");
+        }
+
+        [HttpPost("{id}/lubie/{recipientId}")]
+        public async Task<IActionResult> LubiUser(int id, int recipientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var lubie = await _repo.GetLubie(id, recipientId);
+
+            if (lubie != null)
+                return BadRequest("Już lubisz tego użytkownika");
+
+            if (await _repo.GetUser(recipientId) == null)
+                return NotFound();
+
+            lubie = new Lubie
+            {
+                LubiId = id,
+                LubiiId = recipientId
+            };
+
+            _repo.Dodaj<Lubie>(lubie);
+
+            if (await _repo.ZapiszWszystko())
+                return Ok();
+
+            return BadRequest("Nie udało polubić się użytkownika");
         }
     }
 }

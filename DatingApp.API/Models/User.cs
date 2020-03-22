@@ -20,5 +20,8 @@ namespace DatingApp.API.Models
         public string Miasto { get; set; }
         public string Kraj { get; set; }
         public ICollection<Photo> Zdjecia { get; set; }
+        public ICollection<Lubie> Lubisz { get; set; }
+        public ICollection<Lubie> Lubic { get; set; }
+
     }
 }

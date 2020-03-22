@@ -16,5 +16,8 @@ namespace DatingApp.API.Helpers
         public int MinWiek { get; set; } = 18;
         public int MaxWiek { get; set; } = 99;
         public string OstatnioByl { get; set; }
+        public bool Lubic { get; set; } = false;
+        public bool Lubisz { get; set; } = false;
+
     }
 }

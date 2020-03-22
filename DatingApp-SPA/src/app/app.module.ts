@@ -38,6 +38,7 @@ import { plLocale } from 'ngx-bootstrap/locale';
 import { registerLocaleData } from '@angular/common';
 import localePl from '@angular/common/locales/pl';
 import { TimeagoModule, TimeagoIntl, TimeagoFormatter, TimeagoCustomFormatter } from 'ngx-timeago';
+import { ListsResolver } from './_resolvers/lists.resolver';
 
 defineLocale('pl', plLocale);
 registerLocaleData(localePl);
@@ -99,7 +100,8 @@ export class MyIntl extends TimeagoIntl {
       MemberListResolver,
       MemberEditResolver,
       {provide: LOCALE_ID, useValue: 'pl'},
-      OchronaPrzedzapisemZmian
+      OchronaPrzedzapisemZmian,
+      ListsResolver
    ],
    bootstrap: [
       AppComponent

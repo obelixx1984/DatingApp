@@ -21,6 +21,12 @@ namespace DatingApp.API.Data
             _context.Add(entity);
         }
 
+        public async Task<Lubie> GetLubie(int userId, int recipientId)
+        {
+            return await _context.Lajki.FirstOrDefaultAsync(u => 
+                u.LubiId == userId && u.LubiiId == recipientId);
+        }
+
         public async Task<Photo> GetMainPhotoForUser(int userId)
         {
             return await _context.Zdjecia.Where(u => u.UserId == userId)
@@ -50,6 +56,18 @@ namespace DatingApp.API.Data
 
             users = users.Where(u => u.Plec == userParametry.Plec);
 
+            if (userParametry.Lubisz)
+            {
+                var userLajki = await GetUserPolubienia(userParametry.UserId, userParametry.Lubisz);
+                users = users.Where(u => userLajki.Contains(u.Id));
+            }
+
+            if (userParametry.Lubic)
+            {
+                var userLajkii = await GetUserPolubienia(userParametry.UserId, userParametry.Lubisz);
+                users = users.Where(u => userLajkii.Contains(u.Id));
+            }
+
             if (userParametry.MinWiek != 18 || userParametry.MaxWiek != 99)
             {
                 var minDob = DateTime.Today.AddYears(-userParametry.MaxWiek - 1);
@@ -72,6 +90,23 @@ namespace DatingApp.API.Data
             }
 
             return await ListaStron<User>.CreateAsync(users, userParametry.NumerStrony, userParametry.RozmiarStrony);
+        }
+
+        private async Task<IEnumerable<int>> GetUserPolubienia(int id, bool polubienia)
+        {
+            var user = await _context.Users
+                .Include(x => x.Lubisz)
+                .Include(x => x.Lubic)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (polubienia)
+            {
+                return user.Lubisz.Where(u => u.LubiiId == id).Select(i => i.LubiId);
+            }
+            else
+            {
+                return user.Lubic.Where(u => u.LubiId == id).Select(i => i.LubiiId);
+            }
         }
 
         public void Usun<T>(T entity) where T : class
