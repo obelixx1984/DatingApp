@@ -1,3 +1,61 @@
-<p>
-  messages works!
-</p>
+<div class="container mt-5">
+  <div class="row">
+    <div class="btn-group">
+      <button class="btn btn-primary" [(ngModel)]="naglowekWiadomosci" btnRadio="Nieprzeczytane" (click)="loadWiadomosci()">
+        <i class="fa fa-envelope"></i> Nieprzeczytane
+      </button>
+      <button class="btn btn-primary" [(ngModel)]="naglowekWiadomosci" btnRadio="SkrzynkaOdbiorcza" (click)="loadWiadomosci()">
+        <i class="fa fa-envelope-open"></i> Skrzynka odbiorcza
+      </button>
+      <button class="btn btn-primary" [(ngModel)]="naglowekWiadomosci" btnRadio="SkrzynkaNadawcza" (click)="loadWiadomosci()">
+        <i class="fa fa-paper-plane"></i> Skrzynka Nadawcza
+      </button>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="wiadomosci.length == 0">
+    <h3>Brak wiadomości</h3>
+  </div>
+
+  <div class="row" *ngIf="wiadomosci.length > 0">
+    <table class="table table-hover" style="cursor: pointer">
+      <tr>
+        <th style="width: 40%">Wiadomość</th>
+        <th style="width: 20%">Od / Do</th>
+        <th style="width: 20%">Wysłane / Odebrane</th>
+        <th style="width: 20%"></th>
+      </tr>
+      <tr *ngFor="let wiadomosc of wiadomosci" [routerLink]="['/uzytkownicy', 
+        naglowekWiadomosci == 'SkrzynkaNadawcza' ? wiadomosc.odbiorcaId : wiadomosc.wyslalId]" 
+          [queryParams]="{tab: 3}">
+        <td>{{wiadomosc.tresc}}</td>
+        <td>
+          <div *ngIf="naglowekWiadomosci != 'SkrzynkaNadawcza'">
+                <img src={{wiadomosc?.wyslalZdjecieUrl}} class="img-circle rounded-circle mr-1">
+                <strong>{{wiadomosc.wyslalTytul}}</strong>
+          </div>
+          <div *ngIf="naglowekWiadomosci == 'SkrzynkaNadawcza'">
+                <img src={{wiadomosc?.odbiorcaZdjecieUrl}} class="img-circle rounded-circle mr-1">
+                <strong>{{wiadomosc.odbiorcaTytul}}</strong>
+          </div>
+        </td>
+        <td>{{wiadomosc.dataWyslania | timeago}}</td>
+        <td>
+          <button class="btn btn-danger" (click)="$event.stopPropagation()" (click)="usunWiadomosc(wiadomosc.id)">Usuń</button>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+</div>
+
+<div class="d-flex justify-content-center">
+    <pagination [boundaryLinks]="true" 
+                [totalItems]="paginacja.caloscItems"
+                [itemsPerPage]="paginacja.itemsNaStrone"
+                [(ngModel)]="paginacja.domyslnaStrona"
+                (pageChanged)="zmienStrone($event)"
+              previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+  </pagination>
+  </div>

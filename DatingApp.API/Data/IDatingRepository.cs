@@ -15,5 +15,8 @@ namespace DatingApp.API.Data
          Task<Photo> GetPhoto(int id);
          Task<Photo> GetMainPhotoForUser(int userId);
          Task<Lubie> GetLubie(int userId, int recipientId);
+         Task<Wiadomosci> GetWiadomosci(int id);
+         Task<ListaStron<Wiadomosci>> GetWiadomosciDoUser(WiadomosciParametry wiadomosciParametry);
+         Task<IEnumerable<Wiadomosci>> GetWiadomosciWatek(int userId, int odbiorcaId);
     }
 }

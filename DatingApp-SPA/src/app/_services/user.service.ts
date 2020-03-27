@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../_models/user';
 import { PaginacjaResultat } from '../_models/paginacja';
 import { map } from 'rxjs/operators';
+import { Wiadomosci } from '../_models/wiadomosci';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,7 @@ getUsers(strona?, itemsNaStrone?, userParametry?, lubieParametry?): Observable<P
   if (lubieParametry === 'Lubisz') {
     params = params.append('lubisz', 'true');
   }
-  
+
   if (lubieParametry === 'Lubic') {
     params = params.append('lubic', 'true');
   }
@@ -69,6 +70,47 @@ usunZdjecie(userId: number, id: number) {
 
 wyslijLubie(id: number, recipientId: number) {
   return this.http.post(this.baseUrl + 'users/' + id + '/lubie/' + recipientId, {});
+}
+
+getWiadomosci(id: number, strona?, itemsNaStrone?, naglowekWiadomosci?) {
+  const paginacjaResultat: PaginacjaResultat<Wiadomosci[]> = new PaginacjaResultat<Wiadomosci[]>();
+
+  let params = new HttpParams();
+
+  params = params.append('NaglowekWiadomosci', naglowekWiadomosci);
+
+  if (strona != null && itemsNaStrone != null) {
+    params = params.append('numerStrony', strona);
+    params = params.append('rozmiarStrony', itemsNaStrone);
+  }
+
+  return this.http.get<Wiadomosci[]>(this.baseUrl + 'users/' + id + '/wiadomosci', {observe: 'response', params})
+    .pipe(
+      map(response => {
+        paginacjaResultat.resultat = response.body;
+        if (response.headers.get('Naglowki') !== null) {
+          paginacjaResultat.paginacja = JSON.parse(response.headers.get('Naglowki'));
+        }
+        return paginacjaResultat;
+      })
+    );
+}
+
+getWiadomosciWatek(id: number, odbiorcaId: number) {
+  return this.http.get<Wiadomosci[]>(this.baseUrl + 'users/' + id + '/wiadomosci/watek/' + odbiorcaId);
+}
+
+wyslijWiadomosc(id: number, wiadomosci: Wiadomosci) {
+  return this.http.post(this.baseUrl + 'users/' + id + '/wiadomosci', wiadomosci);
+}
+
+usunWiadomosc(id: number, userId: number) {
+  return this.http.post(this.baseUrl + 'users/' + userId + '/wiadomosci/' + id, {});
+}
+
+wiadomoscPrzeczytana(userId: number, wiadomosciId: number) {
+  return this.http.post(this.baseUrl + 'users/' + userId + '/wiadomosci/' + wiadomosciId + '/przeczytana', {})
+  .subscribe();
 }
 
 }

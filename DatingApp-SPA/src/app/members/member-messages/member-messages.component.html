@@ -1,0 +1,61 @@
+<div class="card">
+  <div class="card-body">
+    <div *ngIf="wiadomosc?.length === 0">
+      <p>Brak wiadomości.... rozpocznij rozmowę</p>
+    </div>
+
+    <ul class="chat">
+      <li *ngFor="let wiadomosci of wiadomosc">
+        <!-- to on -->
+        <div *ngIf="wiadomosci.wyslalId == odbiorcaId">
+          <span class="chat-img float-left">
+            <img src="{{wiadomosci.wyslalZdjecieUrl}}" alt="{{wiadomosci.wyslalTytul}}" class="rounded-circle">
+          </span>
+          <div class="chat-body">
+            <div class="header">
+              <strong class="primary-font">{{wiadomosci.wyslalTytul}}</strong>
+              <small class="text-muted float-right">
+                <span class="fa fa-clock-o">{{wiadomosci.dataWyslania | timeago}}</span>
+              </small>
+            </div>
+            <p>{{wiadomosci.tresc}}</p>
+          </div>
+        </div>
+        
+        <!-- to ja -->
+        <div *ngIf="wiadomosci.wyslalId != odbiorcaId">
+          <span class="chat-img float-right">
+            <img src="{{wiadomosci.wyslalZdjecieUrl}}" alt="{{wiadomosci.wyslalTytul}}" class="rounded-circle">
+          </span>
+          <div class="chat-body">
+            <div class="header">
+              <small class="text-muted">
+                <span class="fa fa-clock-o">{{wiadomosci.dataWyslania | timeago}}</span>
+                <span *ngIf="!wiadomosci.jestCzytana" class="text-danger">(nieprzeczytane)</span>
+                <span *ngIf="wiadomosci.jestCzytana" class="text-success">(Przeczytana {{wiadomosci.dataCzytania | timeago}})</span>
+              </small>
+              <strong class="primary-font float-right">{{wiadomosci.wyslalTytul}}</strong>
+              
+            </div>
+            <p>{{wiadomosci.tresc}}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="card-footer">
+    <form #wiadomoscForm="ngForm" (ngSubmit)="wiadomoscForm.valid && wyslijWiadomosc()">
+      <div class="input-group">
+        <input type="text" 
+          [(ngModel)]="nowaWiadomosc.tresc"
+          name="tresc"
+          required
+          class="form-control input-sm" 
+          placeholder="Wyślij wiadomość">
+        <div class="input-group-append">
+          <button class="btn btn-primary" [disabled]="!wiadomoscForm.valid">Wyślij</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

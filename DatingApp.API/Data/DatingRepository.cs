@@ -118,5 +118,53 @@ namespace DatingApp.API.Data
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<Wiadomosci> GetWiadomosci(int id)
+        {
+            return await _context.Wiadomosc.FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task<ListaStron<Wiadomosci>> GetWiadomosciDoUser(WiadomosciParametry wiadomosciParametry)
+        {
+            var wiadomosc = _context.Wiadomosc
+                .Include(u => u.Wyslal).ThenInclude(p => p.Zdjecia)
+                .Include(u => u.Odbiorca).ThenInclude(p => p.Zdjecia)
+                .AsQueryable();
+
+            switch (wiadomosciParametry.NaglowekWiadomosci)
+            {
+                case "SkrzynkaOdbiorcza":
+                    wiadomosc = wiadomosc.Where(u => u.OdbiorcaId == wiadomosciParametry.UserId 
+                        && u.OdbiorcaUsunal == false);
+                    break;
+                case "SkrzynkaNadawcza":
+                    wiadomosc = wiadomosc.Where(u => u.WyslalId == wiadomosciParametry.UserId 
+                        && u.WysylajacyUsunal == false);
+                    break;
+                default:
+                    wiadomosc = wiadomosc.Where(u => u.OdbiorcaId == wiadomosciParametry.UserId 
+                        && u.OdbiorcaUsunal == false && u.JestCzytana == false);
+                    break;
+            }
+
+            wiadomosc = wiadomosc.OrderByDescending(d => d.DataWyslania);
+            return await ListaStron<Wiadomosci>.CreateAsync(wiadomosc, 
+                wiadomosciParametry.NumerStrony, wiadomosciParametry.RozmiarStrony);
+        }
+
+        public async Task<IEnumerable<Wiadomosci>> GetWiadomosciWatek(int userId, int odbiorcaId)
+        {
+            var wiadomosc = await _context.Wiadomosc
+                .Include(u => u.Wyslal).ThenInclude(p => p.Zdjecia)
+                .Include(u => u.Odbiorca).ThenInclude(p => p.Zdjecia)
+                .Where(m => m.OdbiorcaId == userId && m.OdbiorcaUsunal == false 
+                    && m.WyslalId == odbiorcaId 
+                    || m.OdbiorcaId == odbiorcaId && m.WyslalId == userId 
+                    && m.WysylajacyUsunal == false)
+                .OrderByDescending(m => m.DataWyslania)
+                .ToListAsync();
+
+            return wiadomosc;    
+        }
     }
 }

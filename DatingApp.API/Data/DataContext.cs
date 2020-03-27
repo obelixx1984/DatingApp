@@ -11,6 +11,7 @@ namespace DatingApp.API.Controllers.Data
         public DbSet<User> Users {get; set;}
         public DbSet<Photo> Zdjecia { get; set; }
         public DbSet<Lubie> Lajki { get; set; }
+        public DbSet<Wiadomosci> Wiadomosc { get; set; }
 
          protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,6 +28,16 @@ namespace DatingApp.API.Controllers.Data
                 .HasOne(u => u.Lubi)
                 .WithMany(u => u.Lubic)
                 .HasForeignKey(u => u.LubiId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Wiadomosci>()
+                .HasOne(u => u.Wyslal)
+                .WithMany(m => m.WiadomoscWyslana)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Wiadomosci>()
+                .HasOne(u => u.Odbiorca)
+                .WithMany(m => m.WiadomosciOdebrane)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

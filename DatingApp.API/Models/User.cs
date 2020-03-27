@@ -22,6 +22,8 @@ namespace DatingApp.API.Models
         public ICollection<Photo> Zdjecia { get; set; }
         public ICollection<Lubie> Lubisz { get; set; }
         public ICollection<Lubie> Lubic { get; set; }
+        public ICollection<Wiadomosci> WiadomoscWyslana { get; set; }
+        public ICollection<Wiadomosci> WiadomosciOdebrane { get; set; }
 
     }
 }

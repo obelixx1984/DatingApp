@@ -11,6 +11,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { OchronaPrzedzapisemZmian } from './_guards/ochrona-przedzapisem-zmian.guard';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { WiadomosciResolver } from './_resolvers/wiadomosci.resolver';
 
 export const appRoutes: Routes = [
     { path: '', component: HomeComponent},
@@ -25,7 +26,7 @@ export const appRoutes: Routes = [
                 resolve: {user: MemberDetailResolver}},
             { path: 'uzytkownik/edytuj', component: MemberEditComponent,
                 resolve: {user: MemberEditResolver}, canDeactivate: [OchronaPrzedzapisemZmian]},
-            { path: 'wiadomosci', component: MessagesComponent},
+            { path: 'wiadomosci', component: MessagesComponent, resolve: {wiadomosci: WiadomosciResolver}},
             { path: 'listy', component: ListsComponent, resolve: {users: ListsResolver}},
         ]
     },

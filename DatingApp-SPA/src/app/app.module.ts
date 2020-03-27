@@ -39,6 +39,8 @@ import { registerLocaleData } from '@angular/common';
 import localePl from '@angular/common/locales/pl';
 import { TimeagoModule, TimeagoIntl, TimeagoFormatter, TimeagoCustomFormatter } from 'ngx-timeago';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { WiadomosciResolver } from './_resolvers/wiadomosci.resolver';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 defineLocale('pl', plLocale);
 registerLocaleData(localePl);
@@ -64,7 +66,8 @@ export class MyIntl extends TimeagoIntl {
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      MemberMessagesComponent
    ],
    imports: [
       BrowserModule,
@@ -101,7 +104,8 @@ export class MyIntl extends TimeagoIntl {
       MemberEditResolver,
       {provide: LOCALE_ID, useValue: 'pl'},
       OchronaPrzedzapisemZmian,
-      ListsResolver
+      ListsResolver,
+      WiadomosciResolver
    ],
    bootstrap: [
       AppComponent
